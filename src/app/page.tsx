@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BarChart,Bar,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,ReferenceLine,} from 'recharts';
 import {Settings, CheckCircle2,AlertTriangle, Award,  Zap, Moon, Droplets, Monitor, Activity,  Coffee, Check, ArrowUp, ArrowDown} from 'lucide-react';
@@ -335,7 +335,7 @@ export default function Page() {
               <div className="grid grid-cols-1 gap-6">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold dark:text-white">Today's Check-in</h2>
+                    <h2 className="text-xl font-semibold dark:text-white">Today&apos;ss Check-in</h2>
                     <button
                       onClick={handleCheckIn}
                       disabled={todayComplete}
@@ -374,7 +374,7 @@ export default function Page() {
                     {/* Right side - Summary */}
                     <div>
                       <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <h3 className="text-lg font-medium mb-3 dark:text-white">Today's Summary</h3>
+                        <h3 className="text-lg font-medium mb-3 dark:text-white">Today&apos;ss Summary</h3>
                         <div className="space-y-2">
                           {habits.map(habit => {
                             const goalMet = habit.id === 'screen' 
@@ -503,7 +503,6 @@ export default function Page() {
 // Habit Slider Component
 const HabitSlider: React.FC<SliderProps> = ({ habit, onChange }) => {
   const isReversed = habit.id === 'screen'; // For screen time, lower is better
-  const percentage = ((habit.current - habit.goal) / habit.goal) * 100;
   const isOnTarget = isReversed 
     ? habit.current <= habit.goal 
     : habit.current >= habit.goal;
@@ -696,11 +695,11 @@ const StreakTracker: React.FC<StreakTrackerProps> = ({
             <Award className="h-5 w-5 text-yellow-300" />
             <div>
               {streak >= 30 ? (
-                <span>Master Tracker: You're in the top 1% of users! 🏆</span>
+                <span>Master Tracker: You&apos;sre in the top 1% of users! 🏆</span>
               ) : streak >= 15 ? (
-                <span>Habit Pro: You're building serious momentum! 🥇</span>
+                <span>Habit Pro: You&apos;sre building serious momentum! 🥇</span>
               ) : (
-                <span>Streak Achiever: You're building consistency! ⭐</span>
+                <span>Streak Achiever: You&apos;sre building consistency! ⭐</span>
               )}
             </div>
           </div>
@@ -722,7 +721,7 @@ const OverallProgress: React.FC<{ habits: HabitData[] }> = ({ habits }) => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 h-full flex flex-col justify-center">
       <div className="text-center mb-2">
-        <span className="text-gray-500 dark:text-gray-400 text-sm">Today's Progress</span>
+        <span className="text-gray-500 dark:text-gray-400 text-sm">Today&apos;ss Progress</span>
         <div className="text-3xl font-bold mt-1 dark:text-white">{percentage}%</div>
       </div>
       
@@ -769,56 +768,6 @@ const OverallProgress: React.FC<{ habits: HabitData[] }> = ({ habits }) => {
     </div>
   );
 };
-
-
-// Stats Card Component
-const StatsCard: React.FC<StatsCardProps> = ({ 
-  title, value, label, icon, trend, trendValue, color 
-}) => {
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-      <div className="flex justify-between items-start">
-        <div>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">{title}</p>
-          <div className="flex items-end mt-1 space-x-1">
-            <span className="text-2xl font-bold dark:text-white">{value}</span>
-            <span className="text-gray-500 dark:text-gray-400 text-sm">{label}</span>
-          </div>
-        </div>
-        <div 
-          className="p-2 rounded-full" 
-          style={{ backgroundColor: `${color}20` }}
-        >
-          <div style={{ color }}>{icon}</div>
-        </div>
-      </div>
-      
-      {trend && trendValue && (
-        <div className="mt-4 border-t border-gray-100 dark:border-gray-700 pt-2">
-          <div className="flex items-center space-x-1">
-            {trend === 'up' ? (
-              <ArrowUp className="h-4 w-4 text-green-500" />
-            ) : trend === 'down' ? (
-              <ArrowDown className="h-4 w-4 text-red-500" />
-            ) : (
-              <div className="h-4 w-4 bg-gray-300 dark:bg-gray-600 rounded-full" />
-            )}
-            <span className={`text-sm ${
-              trend === 'up' 
-                ? 'text-green-500' 
-                : trend === 'down' 
-                  ? 'text-red-500' 
-                  : 'text-gray-500 dark:text-gray-400'
-            }`}>
-              {trendValue} {trend !== 'neutral' && 'vs yesterday'}
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // Habit Chart Component for Details
 const HabitChartDetail: React.FC<HabitChartProps> = ({
   habit,
@@ -831,7 +780,10 @@ const HabitChartDetail: React.FC<HabitChartProps> = ({
       value: number;
       name?: string;
       dataKey?: string;
-      payload?: any;
+      payload?: {
+        day: string;
+        value: number;
+      };
     }>;
     label?: string;
   };
