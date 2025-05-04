@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BarChart,Bar,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,ReferenceLine,} from 'recharts';
-import {Settings, CheckCircle2,AlertTriangle, Award,  Zap, Moon, Droplets, Monitor, Activity,  Coffee, Check, ArrowUp, ArrowDown} from 'lucide-react';
+import {Settings, CheckCircle2,AlertTriangle, Award,  Zap, Moon, Droplets, Monitor, Activity,  Coffee, Check} from 'lucide-react';
 
 // ============ TYPES AND INTERFACES ============
 
@@ -39,21 +39,28 @@ interface HabitChartProps {
   chartType?: 'line' | 'bar';
 }
 
-interface StatsCardProps {
-  title: string;
-  value: string | number;
-  label: string;
-  icon: React.ReactNode;
-  trend?: 'up' | 'down' | 'neutral';
-  trendValue?: string;
-  color: string;
-}
 
 interface GoalCardProps {
   habit: HabitData;
   onUpdate: (id: string, goal: number) => void;
 }
 
+interface DataPoint {
+  day: string;
+  value: number;
+}
+
+
+// Define an interface for the dynamic combined data
+interface CombinedDayData {
+  day: string;
+  [habitId: string]: string | number; // Index signature for dynamic habit IDs
+}
+
+// Component props interface
+interface WeeklyActivityProps {
+  habits: HabitData[];
+}
 // ============ MAIN PAGE COMPONENT ============
 
 export default function Page() {
@@ -1150,10 +1157,11 @@ const GoalCard: React.FC<GoalCardProps> = ({ habit, onUpdate }) => {
 
 
 // WeeklyActivity Component
-const WeeklyActivity: React.FC<{ habits: HabitData[] }> = ({ habits }) => {
-  const days = habits[0].data.map(d => d.day);
-  const combinedData = days.map((day, i) => {
-    const dayData: any = { day };
+const WeeklyActivity: React.FC<WeeklyActivityProps> = ({ habits }) => {
+  const days = habits[0]?.data.map(d => d.day) || [];
+  
+  const combinedData: CombinedDayData[] = days.map((day, i) => {
+    const dayData: CombinedDayData = { day };
     habits.forEach(habit => {
       dayData[habit.id] = habit.data[i].value;
     });
